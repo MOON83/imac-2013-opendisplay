@@ -374,3 +374,86 @@ Hopefully this guide helps someone else give theirs a second life.
 **Full technical report:** https://github.com/tlscodes/imac-as-monitor/issues/2
 
 **Status:** Experimental community release, November 2026.
+
+## Bonus: Make Your iMac Start Automatically Without a Keyboard
+
+Once everything is working, there's one final improvement that makes the whole setup much more convenient.
+
+**You can configure the iMac to boot directly into OpenDisplay whenever you switch it on. No holding Alt, no selecting EFI Boot, and no navigating Linux menus!**
+
+There are two separate startup settings to configure. You only need a keyboard for the initial setup.
+
+### Step 1 — Make the iMac Remember the Linux SD Card
+
+1. Leave your working Linux SD card or USB stick connected to the iMac.
+2. Restart the iMac while holding **Option (⌥)** on an Apple keyboard, or **Alt** on a Windows keyboard.
+3. When Apple's startup selection screen appears, highlight **EFI Boot**.
+4. Hold down the **Control (Ctrl)** key.
+5. While holding Control, press **Enter** to boot.
+
+On compatible Intel Macs, this tells Apple's startup system to remember that drive as the preferred startup device.
+
+On our Late 2013 iMac, the machine subsequently started directly from the Linux SD card without needing to hold Alt again.
+
+If this doesn't work on your machine, you may still need to select EFI Boot manually. The startup preference can also be reset.
+
+### Step 2 — Make Linux Start OpenDisplay Automatically
+
+The second step removes the need to select OpenDisplay manually from the Linux startup menu.
+
+Shut down the iMac, remove the Linux SD card or USB stick, and connect it to your modern Mac.
+
+Open the drive named **DEBLIVE**.
+
+Inside it, locate:
+
+`boot/grub/grub.cfg`
+
+This small configuration file controls the Linux startup menu.
+
+**Make a backup copy of `grub.cfg` before editing it.**
+
+Open the original file using TextEdit, making sure you're editing it as plain text.
+
+Near the top, find the lines beginning with `set timeout`, `set timeout_style`, and `set default`.
+
+Change those settings to:
+
+```text
+set timeout=3
+set timeout_style=menu
+set default=od
+```
+
+Leave everything else unchanged.
+
+Here's what these settings mean:
+
+- **`timeout=3`** — Linux waits just three seconds.
+- **`timeout_style=menu`** — The startup menu remains visible for troubleshooting.
+- **`default=od`** — OpenDisplay starts automatically.
+
+Save the file, keeping its original name `grub.cfg`, without adding `.txt`.
+
+Safely eject the SD card or USB stick and return it to the iMac.
+
+### Step 3 — Enjoy Automatic Startup!
+
+Switch on the iMac normally.
+
+If both startup settings have been accepted, the computer should:
+
+1. Automatically find the Linux boot drive.
+2. Start Linux without requiring any keyboard input.
+3. Select OpenDisplay after three seconds.
+4. Launch the receiver, ready for your modern Mac to connect.
+
+**That's it! Your old iMac now behaves much more like a dedicated external monitor.**
+
+You can even disconnect the keyboard from the iMac for everyday use.
+
+The Linux diagnostic options remain available through the startup menu if you ever need to troubleshoot.
+
+**Test both changes before disconnecting your keyboard.** This procedure worked on our Late 2013 iMac, but automatic EFI startup selection may behave differently on other machines.
+
+And remember to leave the Linux SD card or USB stick connected whenever you want to use the iMac as a monitor!
